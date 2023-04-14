@@ -28,15 +28,36 @@ app.post('/auth/login', async (req, res) => {
             });
         }
         
-        const isValidPass = await bcrypt.compare(req.body.password, user._doc.password);
+        const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
 
         if (!isValidPass) {
             return req.status(404).json({
                 massage: "Не верный логин или пароль",
             });
         }
-    } catch (err) {
         
+        const token = jwt.sign(
+            {
+            _id: user._id,
+            }, 
+            'secret123', 
+            {
+                expiresIn: '30'
+            },
+        );
+
+        const { passwordHash, ...userData } = user._doc;
+
+        res.json({
+            ...userData,
+            token,
+    });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: "Не удалось авторизоваться",
+        });
     }
 });
 
