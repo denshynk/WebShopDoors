@@ -8,12 +8,19 @@ import { registerValidation } from "./validation/auth.js";
 
 import UserModel from './models/User.js'
 
-mongoose.connect(
-    "mongodb+srv://user:12345@cluster0.yezzjjp.mongodb.net/blog?retryWrites=true&w=majority")
-    .then(()=> console.log('DB ok'))
-    .catch((err)=> console.log('DB error', err));
-;
+const PORT = process.env.PORT || 5000
 
+const app = express()
+
+const start = async () => {
+    try {
+        await sequelize.authenticate()
+        await sequelize.sync()
+        app.listen(PORT, (err) => {
+            if (err) {
+                return console.log(err); 
+            }
+        
 const app = express();
 
 app.use(express.json());
