@@ -1,8 +1,13 @@
 import sequelize from '../db.js';
-import {DataTypes} from 'sequelize' 
+import DataTypes from 'sequelize' 
 
 
-
+const SuperUser = sequelize.define('superusers', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    login: {type: DataTypes.STRING, unique: true,},
+    password: {type: DataTypes.STRING},
+    role: {type: DataTypes.STRING, defaultValue: "USER"},
+})
 
 const Basket = sequelize.define('basket', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -12,44 +17,52 @@ const Basket = sequelize.define('basket', {
     details: {type: DataTypes.STRING, allowNull: true},
 });
 
-const BasketDoors = sequelize.define('basket_doors', {
+const BasketProducts = sequelize.define('basket_products', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 });
 
 
-const Doors = sequelize.define('Doors', {
+const Products = sequelize.define('Products', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING, unique: true, allowNull: false},
     price: {type: DataTypes.INTEGER, allowNull: false}, 
     img: {type: DataTypes.STRING, allowNull: false}, 
 });
 
-const Info = sequelize.define('info', {
+const Category = sequelize.define('categories', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    name: {type: DataTypes.STRING, unique: true, allowNull: false},
+})
+
+const ProductsInfo = sequelize.define('Products_infos', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    title: {type: DataTypes.STRING, allowNull: false},
     description: {type: DataTypes.STRING, allowNull: false},
-    characteristics: {type: DataTypes.STRING, allowNull: false},
-    guarantee: {type: DataTypes.STRING, allowNull: false},
-
-});
+})
 
 
 
-Basket.hasMany(BasketDoors)
-BasketDoors.belongsTo(Basket)
+Basket.hasMany(BasketProducts)
+BasketProducts.belongsTo(Basket)
 
-Doors.hasMany(BasketDoors)
-BasketDoors.belongsTo(Doors)
+Products.hasMany(BasketProducts)
+BasketProducts.belongsTo(Products)
 
-Doors.hasOne(Info)
-Info.belongsTo(Doors)
+Products.hasOne(ProductsInfo)
+ProductsInfo.belongsTo(Products)
+
+Category.hasMany(Products);
+Products.belongsTo(Category);
 
 
-export default  {
+export {
     Basket, 
-    BasketDoors,
-    Doors,
-    
-    Info
+    BasketProducts,
+    Products,
+    ProductsInfo,
+    Category,
+    SuperUser
+
 }
 
 
