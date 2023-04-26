@@ -3,9 +3,8 @@ import productsController from '../controllers/productsController.js';
 
 const router = new Router();
 
-router.route('/')
-  .post(productsController.create)
-  .get(productsController.getAll);
+router.post('/', productsController.create)
+router.get('/', productsController.getAll);
 
 router.get('/:id', productsController.getOne);
 

@@ -4,8 +4,8 @@ import ApiError from '../error/ApiError.js'
 class categoryController {
     async create(req, res) {
         const{name} = req.body
-        const category = await Category.create({name})
-        return res.json(category)    
+        const categories = await Category.create({name})
+        return res.json(categories)    
     }
 
     async getAll(req, res) {
