@@ -4,8 +4,8 @@ import DataTypes from 'sequelize'
 
 const SuperUser = sequelize.define('superusers', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    login: {type: DataTypes.STRING, unique: true,},
-    password: {type: DataTypes.STRING},
+    login: {type: DataTypes.STRING, unique: true, allowNull: false},
+    password: {type: DataTypes.STRING, allowNull: false},
     role: {type: DataTypes.STRING, defaultValue: "USER"},
 })
 
@@ -14,12 +14,11 @@ const Basket = sequelize.define('basket', {
     name: {type: DataTypes.STRING, allowNull: false},
     surname: {type: DataTypes.STRING, allowNull: false},
     tnumber: {type: DataTypes.STRING, allowNull: false},
+    email: {type: DataTypes.STRING, allowNull: true},
     details: {type: DataTypes.STRING, allowNull: true},
+
 });
 
-const BasketProducts = sequelize.define('basket_products', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-});
 
 const Products = sequelize.define('Products', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -41,13 +40,10 @@ const ProductsInfo = sequelize.define('Products_infos', {
 
 
 
-Basket.hasMany(BasketProducts)
-BasketProducts.belongsTo(Basket)
+Products.hasMany(Basket)
+Basket.belongsTo(Products)
 
-Products.hasMany(BasketProducts)
-BasketProducts.belongsTo(Products)
-
-Products.hasOne(ProductsInfo)
+Products.hasMany(ProductsInfo, {as: 'info'})
 ProductsInfo.belongsTo(Products)
 
 Category.hasMany(Products);
@@ -56,7 +52,6 @@ Products.belongsTo(Category);
 
 export {
     Basket, 
-    BasketProducts,
     Products,
     ProductsInfo,
     Category,
